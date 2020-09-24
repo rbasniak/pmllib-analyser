@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Version>1.0.1</Version>
+    <Authors>rbasniak</Authors>
+    <Product>rbkApiModules</Product>
+    <Copyright>rbasniak</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\code.png" />
+    <None Remove="Resources\folder.png" />
+    <None Remove="Resources\green_folder.png" />
+    <None Remove="Resources\non-code.png" />
+    <None Remove="Resources\red_folder.png" />
+    <None Remove="Resources\uda.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MahApps.Metro" Version="2.2.0" />
+    <PackageReference Include="Ookii.Dialogs.Wpf.NETCore" Version="2.1.0" />
+    <PackageReference Include="RbkUtilities.MVVM" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\code.png" />
+    <Resource Include="Resources\folder.png" />
+    <Resource Include="Resources\green_folder.png" />
+    <Resource Include="Resources\non-code.png" />
+    <Resource Include="Resources\red_folder.png" />
+    <Resource Include="Resources\uda.png" />
+  </ItemGroup>
+
+</Project>

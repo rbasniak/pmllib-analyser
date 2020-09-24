@@ -1,0 +1,109 @@
+﻿<mah:MetroWindow x:Class="PmllibAnalyser.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PmllibAnalyser"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        mc:Ignorable="d"
+        Title="RBK PMLLIB Analyser - v1.0.1" Height="900" Width="600" WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <local:MainViewModel></local:MainViewModel>
+    </Window.DataContext>
+    <Window.Resources>
+        <local:IconConverter x:Key="FolderIconConverter"></local:IconConverter>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Margin="8 8 8 4" Height="Auto">
+            <Label Content="PMLLIB folder" Height="26" Width="Auto" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Center"/>
+            <TextBox Text="{Binding PmllibPath}" TextWrapping="NoWrap" Height="28" Margin="99,0,27,0" VerticalAlignment="Center"/>
+            <Button Content="..." Width="30" Command="{Binding LoadFolderCommand}" HorizontalAlignment="Right" VerticalAlignment="Center" IsEnabled="{Binding LoadButtonEnabled}"/>
+        </Grid>
+        <TabControl Grid.Row="1" Visibility="{Binding TabsVisibility}" Margin="8">
+            <TabItem Header="PMLLIB" mah:HeaderedControlHelper.HeaderFontSize="20" >
+                <TreeView ItemsSource="{Binding Folders}">
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="{x:Type TreeViewItem}">
+                            <Setter Property="IsExpanded" Value="{Binding Expanded, Mode=TwoWay}" />
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                    <TreeView.Resources>
+                        <HierarchicalDataTemplate DataType="{x:Type local:PmllibFolder}" ItemsSource="{Binding Children}">
+                            <StackPanel Orientation="Horizontal" Margin="4">
+                                <Image HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 8 0"
+                               Source="{Binding Converter={StaticResource FolderIconConverter}}" Width="24" Height="24" />
+                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="13"/>
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type local:PmllibFile}" ItemsSource="{Binding Children}">
+                            <StackPanel Orientation="Horizontal" Margin="4">
+                                <Image HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 8 0"
+                               Source="{Binding Converter={StaticResource FolderIconConverter}}" Width="24" Height="24" />
+                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="13"/>
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type local:TreeNode}" ItemsSource="{Binding Children}">
+                            <StackPanel Orientation="Horizontal" Margin="4">
+                                <Image HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 8 0"
+                               Source="{Binding Converter={StaticResource FolderIconConverter}}" Width="24" Height="24" />
+                                <TextBlock Text="{Binding Title}" VerticalAlignment="Center" FontSize="13"/>
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </TreeView.Resources>
+                </TreeView>
+            </TabItem>
+            <TabItem Header="UDAs / UDETs" mah:HeaderedControlHelper.HeaderFontSize="20">
+                <TreeView ItemsSource="{Binding Udas}">
+                    <TreeView.Resources>
+                        <HierarchicalDataTemplate DataType="{x:Type local:Uda}" ItemsSource="{Binding UsedBy}">
+                            <StackPanel Orientation="Horizontal" Margin="4">
+                                <Image HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 8 0"
+                               Source="{Binding Converter={StaticResource FolderIconConverter}}" Width="24" Height="24" />
+                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="13"/>
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                        <DataTemplate DataType="{x:Type local:PmllibFile}">
+                            <StackPanel Orientation="Horizontal" Margin="4">
+                                <Image HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 8 0"
+                               Source="{Binding Converter={StaticResource FolderIconConverter}}" Width="24" Height="24" />
+                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="13"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </TreeView.Resources>
+                </TreeView>
+            </TabItem>
+            <TabItem Header="SUMMARY" mah:HeaderedControlHelper.HeaderFontSize="20">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Label Content="Total files: " FontSize="16"/>
+                        <Label Content="{Binding TotalFiles}" FontSize="13" VerticalAlignment="Bottom"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Label Content="Code files: " FontSize="16"/>
+                        <Label Content="{Binding TotalCodeFiles}" FontSize="13" VerticalAlignment="Bottom"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Label Content="Migraded files: " FontSize="16"/>
+                        <Label Content="{Binding MigratedFiles}" FontSize="13" VerticalAlignment="Bottom"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Label Content="Migration rate: " FontSize="16"/>
+                        <Label Content="{Binding MigrationRate}" FontSize="13" VerticalAlignment="Bottom"/>
+                        <Label Content="%" FontSize="13" VerticalAlignment="Bottom"/>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+        <Grid Grid.Row="2" Visibility="{Binding LoadingVisibility}">
+            <mah:ProgressRing Margin="0 -75 0 0"></mah:ProgressRing>
+            <Label Content="Loading PMLLIB data, please wait..." HorizontalAlignment="Center" Margin="0,50,0,0" VerticalAlignment="Center"/>
+        </Grid>
+    </Grid>
+</mah:MetroWindow>
